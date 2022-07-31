@@ -13,10 +13,16 @@ CSRC += $(NANOPB_DIR)/pb_decode.c  # The nanopb decoder
 CSRC += $(NANOPB_DIR)/pb_common.c  # The nanopb common parts
 
 # Build rule for the main program
-simple: $(CSRC)
-	$(CC) $(CFLAGS) -osimple $(CSRC)
+simple.elf: $(CSRC)
+	@$(CC) $(CFLAGS) -o simple.elf $(CSRC)
+	@echo CC $<
+	@echo Generating $@
 
 # Build rule for the protocol
 simple.pb.c: simple.proto
-	$(PROTOC) $(PROTOC_OPTS) --nanopb_out=. simple.proto
+	@$(PROTOC) $(PROTOC_OPTS) --nanopb_out=. simple.proto
+	@echo Generating $@ $(@:.c=.h)
 
+clean:
+	@-rm -r simple.elf simple.pb.h simple.pb.c
+	@echo cleaned
